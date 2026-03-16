@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>BlockBlast Pro – Puzzle Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     LOADING SCREEN
+════════════════════════════════════════════════════ -->
+<div id="loading-screen" class="screen active">
+  <div class="loading-logo">
+    <div class="logo-blocks">
+      <span class="lb lb1"></span><span class="lb lb2"></span>
+      <span class="lb lb3"></span><span class="lb lb4"></span>
+    </div>
+    <h1 class="game-title">BLOCK<span>BLAST</span></h1>
+    <p class="game-subtitle">PUZZLE ARENA</p>
+  </div>
+  <div class="loading-bar-wrap"><div id="loading-bar" class="loading-bar"></div></div>
+  <p class="loading-tip" id="loading-tip">Memuat aset game…</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MAIN MENU
+════════════════════════════════════════════════════ -->
+<div id="menu-screen" class="screen">
+  <div class="menu-bg-particles" id="menu-particles"></div>
+  <div class="menu-content">
+    <div class="menu-logo">
+      <div class="logo-blocks small">
+        <span class="lb lb1"></span><span class="lb lb2"></span>
+        <span class="lb lb3"></span><span class="lb lb4"></span>
+      </div>
+      <h1 class="game-title">BLOCK<span>BLAST</span></h1>
+      <p class="game-subtitle">PUZZLE ARENA</p>
+    </div>
+
+    <!-- Player Card -->
+    <div class="player-card" id="player-card">
+      <div class="player-avatar" id="menu-avatar">👾</div>
+      <div class="player-info">
+        <div class="player-name" id="menu-username">Guest</div>
+        <div class="player-rank" id="menu-rank"><span class="rank-badge bronze">🥉 Bronze</span></div>
+        <div class="player-stats-row">
+          <span>Lv.<b id="menu-level">1</b></span>
+          <span>⭐ <b id="menu-score-total">0</b></span>
+          <span>🏆 <b id="menu-wins">0</b></span>
+        </div>
+      </div>
+      <button class="btn-icon" id="btn-edit-profile" title="Edit Profil">✏️</button>
+    </div>
+
+    <!-- Main Buttons -->
+    <div class="menu-buttons">
+      <button class="btn-menu btn-primary" id="btn-play-solo">
+        <span class="btn-icon-left">🎮</span> Main Solo
+        <span class="btn-sub">Classic Mode</span>
+      </button>
+      <button class="btn-menu btn-duel" id="btn-play-duel">
+        <span class="btn-icon-left">⚔️</span> Mode Duel
+        <span class="btn-sub">1 vs 1 Online</span>
+      </button>
+      <button class="btn-menu btn-br" id="btn-play-br">
+        <span class="btn-icon-left">🔥</span> Battle Royale
+        <span class="btn-sub">10 Players</span>
+      </button>
+      <div class="menu-row">
+        <button class="btn-menu btn-half btn-secondary" id="btn-leaderboard">
+          <span>🏆</span> Papan Skor
+        </button>
+        <button class="btn-menu btn-half btn-secondary" id="btn-shop">
+          <span>🛍️</span> Shop
+        </button>
+      </div>
+    </div>
+
+    <!-- Audio Controls -->
+    <div class="audio-controls">
+      <button class="btn-audio" id="btn-toggle-music" title="Toggle Music">🎵</button>
+      <button class="btn-audio" id="btn-toggle-sfx" title="Toggle SFX">🔊</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     LOGIN / REGISTER MODAL
+════════════════════════════════════════════════════ -->
+<div id="modal-login" class="modal hidden">
+  <div class="modal-box">
+    <h2>🎮 Masuk / Daftar</h2>
+    <div class="tab-row">
+      <button class="tab-btn active" data-tab="login">Masuk</button>
+      <button class="tab-btn" data-tab="register">Daftar</button>
+    </div>
+    <!-- Login Form -->
+    <div class="tab-panel active" id="tab-login">
+      <input type="text" id="login-username" class="input-field" placeholder="Username" maxlength="20" />
+      <input type="password" id="login-password" class="input-field" placeholder="Password" />
+      <button class="btn-primary full-width" id="btn-login-submit">Masuk</button>
+      <div class="divider">atau</div>
+      <button class="btn-google full-width" id="btn-login-guest">👾 Main sebagai Guest</button>
+    </div>
+    <!-- Register Form -->
+    <div class="tab-panel hidden" id="tab-register">
+      <input type="text" id="reg-username" class="input-field" placeholder="Username (3-20 karakter)" maxlength="20" />
+      <input type="password" id="reg-password" class="input-field" placeholder="Password" />
+      <input type="password" id="reg-confirm" class="input-field" placeholder="Konfirmasi Password" />
+      <button class="btn-primary full-width" id="btn-register-submit">Daftar</button>
+    </div>
+    <p class="modal-msg" id="login-msg"></p>
+    <button class="btn-close-modal" id="btn-close-login">✕</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PROFILE MODAL
+════════════════════════════════════════════════════ -->
+<div id="modal-profile" class="modal hidden">
+  <div class="modal-box wide">
+    <h2>👤 Profil Pemain</h2>
+    <div class="profile-layout">
+      <div class="profile-left">
+        <div class="avatar-picker" id="avatar-picker-grid"></div>
+        <p class="label-small">Pilih Avatar</p>
+      </div>
+      <div class="profile-right">
+        <label>Username</label>
+        <input type="text" id="profile-username-input" class="input-field" maxlength="20" />
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-val" id="p-level">1</div><div class="stat-lbl">Level</div></div>
+          <div class="stat-box"><div class="stat-val" id="p-score">0</div><div class="stat-lbl">Total Skor</div></div>
+          <div class="stat-box"><div class="stat-val" id="p-games">0</div><div class="stat-lbl">Game</div></div>
+          <div class="stat-box"><div class="stat-val" id="p-wins">0</div><div class="stat-lbl">Menang</div></div>
+          <div class="stat-box"><div class="stat-val" id="p-coins">0</div><div class="stat-lbl">💰 Koin</div></div>
+          <div class="stat-box rank-box"><div class="stat-val" id="p-rank-icon">🥉</div><div class="stat-lbl" id="p-rank-label">Bronze</div></div>
+        </div>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" id="p-xp-bar"></div></div>
+        <p class="xp-label" id="p-xp-label">0 / 1000 XP ke Level 2</p>
+        <button class="btn-primary full-width" id="btn-save-profile">💾 Simpan Profil</button>
+      </div>
+    </div>
+    <button class="btn-close-modal" id="btn-close-profile">✕</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     LEADERBOARD MODAL
+════════════════════════════════════════════════════ -->
+<div id="modal-leaderboard" class="modal hidden">
+  <div class="modal-box wide">
+    <h2>🏆 Papan Skor Global</h2>
+    <div class="lb-tab-row">
+      <button class="lb-tab active" data-lb="score">Skor Tertinggi</button>
+      <button class="lb-tab" data-lb="wins">Kemenangan</button>
+      <button class="lb-tab" data-lb="rank">Rank Tertinggi</button>
+    </div>
+    <div class="lb-list" id="lb-list">
+      <div class="lb-loading">Memuat data…</div>
+    </div>
+    <button class="btn-close-modal" id="btn-close-lb">✕</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SHOP MODAL
+════════════════════════════════════════════════════ -->
+<div id="modal-shop" class="modal hidden">
+  <div class="modal-box wide">
+    <h2>🛍️ Toko Item <span class="coin-display">💰 <span id="shop-coins">0</span></span></h2>
+    <div class="shop-tabs">
+      <button class="shop-tab active" data-cat="skin">Skin Block</button>
+      <button class="shop-tab" data-cat="board">Tema Papan</button>
+      <button class="shop-tab" data-cat="effect">Efek Animasi</button>
+      <button class="shop-tab" data-cat="avatar">Avatar</button>
+    </div>
+    <div class="shop-grid" id="shop-grid"></div>
+    <button class="btn-close-modal" id="btn-close-shop">✕</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MULTIPLAYER LOBBY MODAL
+════════════════════════════════════════════════════ -->
+<div id="modal-lobby" class="modal hidden">
+  <div class="modal-box">
+    <h2 id="lobby-title">⚔️ Mode Duel</h2>
+    <div class="lobby-options" id="lobby-options">
+      <button class="btn-menu btn-primary" id="btn-create-room">🏠 Buat Room</button>
+      <button class="btn-menu btn-secondary" id="btn-join-room">🔑 Gabung Room</button>
+      <button class="btn-menu btn-duel" id="btn-quick-match">⚡ Quick Match</button>
+    </div>
+    <div id="lobby-room-join" class="hidden">
+      <input type="text" id="room-code-input" class="input-field" placeholder="Kode Room (6 digit)" maxlength="6" />
+      <button class="btn-primary full-width" id="btn-join-submit">Gabung</button>
+    </div>
+    <div id="lobby-waiting" class="hidden">
+      <div class="room-code-display">
+        <p>Kode Room:</p>
+        <h2 id="display-room-code" class="room-code">------</h2>
+        <p class="hint">Bagikan kode ini ke teman!</p>
+      </div>
+      <div class="waiting-players" id="waiting-players"></div>
+      <div class="waiting-spinner">⏳ Menunggu pemain…</div>
+    </div>
+    <p class="modal-msg" id="lobby-msg"></p>
+    <button class="btn-close-modal" id="btn-close-lobby">✕</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     GAME SCREEN (SOLO)
+════════════════════════════════════════════════════ -->
+<div id="game-screen" class="screen hidden">
+  <div class="game-hud">
+    <button class="btn-hud" id="btn-game-menu">☰</button>
+    <div class="hud-center">
+      <div class="hud-score-wrap">
+        <div class="hud-label">SKOR</div>
+        <div class="hud-score" id="hud-score">0</div>
+      </div>
+      <div class="hud-combo" id="hud-combo-display" style="display:none">
+        <span class="combo-text">COMBO</span>
+        <span class="combo-num" id="hud-combo-num">x2</span>
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-label">BEST</div>
+      <div class="hud-score small" id="hud-best">0</div>
+    </div>
+  </div>
+
+  <!-- Game Board -->
+  <div class="game-area">
+    <div class="board-container">
+      <canvas id="game-canvas" width="360" height="360"></canvas>
+      <div id="board-overlay" class="board-overlay"></div>
+    </div>
+
+    <!-- Block Tray -->
+    <div class="block-tray" id="block-tray">
+      <div class="tray-slot" id="tray-0"></div>
+      <div class="tray-slot" id="tray-1"></div>
+      <div class="tray-slot" id="tray-2"></div>
+    </div>
+  </div>
+
+  <!-- Game Over Panel -->
+  <div id="game-over-panel" class="game-over-panel hidden">
+    <div class="go-box">
+      <div class="go-emoji">💥</div>
+      <h2>GAME OVER</h2>
+      <div class="go-stats">
+        <div class="go-stat"><span>Skor</span><b id="go-score">0</b></div>
+        <div class="go-stat"><span>Best</span><b id="go-best">0</b></div>
+        <div class="go-stat"><span>+XP</span><b id="go-xp">0</b></div>
+        <div class="go-stat"><span>+Koin</span><b id="go-coins">0</b></div>
+      </div>
+      <div class="rank-up-banner hidden" id="rank-up-banner">🎉 RANK UP! <span id="rank-up-name"></span></div>
+      <button class="btn-primary full-width" id="btn-play-again">🔄 Main Lagi</button>
+      <button class="btn-secondary full-width" id="btn-go-menu">🏠 Menu Utama</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DUEL SCREEN
+════════════════════════════════════════════════════ -->
+<div id="duel-screen" class="screen hidden">
+  <div class="duel-hud">
+    <div class="duel-player-info left">
+      <div class="d-avatar" id="d-my-avatar">👾</div>
+      <div>
+        <div class="d-name" id="d-my-name">You</div>
+        <div class="d-score-wrap">
+          <span class="d-score-lbl">Skor</span>
+          <span class="d-score" id="d-my-score">0</span>
+        </div>
+      </div>
+    </div>
+    <!-- Battle Bar -->
+    <div class="battle-bar-wrap">
+      <div class="battle-bar" id="battle-bar">
+        <div class="battle-bar-fill" id="battle-bar-fill"></div>
+        <div class="battle-bar-center">⚔️</div>
+      </div>
+    </div>
+    <div class="duel-player-info right">
+      <div>
+        <div class="d-name" id="d-opp-name">Lawan</div>
+        <div class="d-score-wrap">
+          <span class="d-score-lbl">Skor</span>
+          <span class="d-score" id="d-opp-score">0</span>
+        </div>
+      </div>
+      <div class="d-avatar" id="d-opp-avatar">🤖</div>
+    </div>
+  </div>
+
+  <div class="duel-boards">
+    <!-- My Board -->
+    <div class="duel-board-wrap my-board">
+      <canvas id="duel-canvas-me" width="270" height="270"></canvas>
+      <div class="duel-block-tray" id="duel-tray-me">
+        <div class="tray-slot small" id="duel-tray-0"></div>
+        <div class="tray-slot small" id="duel-tray-1"></div>
+        <div class="tray-slot small" id="duel-tray-2"></div>
+      </div>
+    </div>
+    <!-- Opponent Board (mini preview) -->
+    <div class="duel-board-wrap opp-board">
+      <canvas id="duel-canvas-opp" width="270" height="270"></canvas>
+      <div class="opp-board-overlay" id="opp-board-overlay"></div>
+    </div>
+  </div>
+
+  <!-- Penalty overlay -->
+  <div id="penalty-overlay" class="penalty-overlay hidden">
+    <div class="penalty-text">⚠️ PENALTI!</div>
+    <div class="penalty-sub" id="penalty-sub">+3 Block Sampah</div>
+  </div>
+
+  <!-- Duel Result -->
+  <div id="duel-result" class="duel-result hidden">
+    <div class="dr-box">
+      <div class="dr-emoji" id="dr-emoji">🏆</div>
+      <h2 id="dr-title">MENANG!</h2>
+      <div class="go-stats">
+        <div class="go-stat"><span>Skor</span><b id="dr-score">0</b></div>
+        <div class="go-stat"><span>+XP</span><b id="dr-xp">0</b></div>
+        <div class="go-stat"><span>+Koin</span><b id="dr-coins">0</b></div>
+      </div>
+      <button class="btn-primary full-width" id="btn-duel-again">🔄 Duel Lagi</button>
+      <button class="btn-secondary full-width" id="btn-duel-menu">🏠 Menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     BATTLE ROYALE SCREEN
+════════════════════════════════════════════════════ -->
+<div id="br-screen" class="screen hidden">
+  <div class="br-hud">
+    <button class="btn-hud" id="btn-br-menu">☰</button>
+    <div class="hud-center">
+      <div class="br-alive">
+        <span class="br-alive-icon">💀</span>
+        <span id="br-alive-count">10</span> tersisa
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-score small" id="br-score">0</div>
+    </div>
+  </div>
+  <div class="br-player-list" id="br-player-list"></div>
+  <div class="br-game-area">
+    <canvas id="br-canvas" width="360" height="360"></canvas>
+    <div class="block-tray" id="br-tray">
+      <div class="tray-slot" id="br-tray-0"></div>
+      <div class="tray-slot" id="br-tray-1"></div>
+      <div class="tray-slot" id="br-tray-2"></div>
+    </div>
+  </div>
+  <div id="br-result" class="duel-result hidden">
+    <div class="dr-box">
+      <div class="dr-emoji" id="br-emoji">🏆</div>
+      <h2 id="br-title">VICTORY ROYALE!</h2>
+      <div class="go-stats">
+        <div class="go-stat"><span>Rank</span><b id="br-rank-final">#1</b></div>
+        <div class="go-stat"><span>Skor</span><b id="br-score-final">0</b></div>
+        <div class="go-stat"><span>+Koin</span><b id="br-coins-final">0</b></div>
+      </div>
+      <button class="btn-primary full-width" id="btn-br-again">🔄 Main Lagi</button>
+      <button class="btn-secondary full-width" id="btn-br-main-menu">🏠 Menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DAILY QUEST / REWARD NOTIFICATION
+════════════════════════════════════════════════════ -->
+<div id="daily-reward-popup" class="daily-popup hidden">
+  <div class="dr-popup-box">
+    <div class="dr-popup-icon">🎁</div>
+    <h3>Login Harian!</h3>
+    <p>Hari ke-<span id="daily-streak">1</span></p>
+    <div class="daily-rewards-row" id="daily-rewards-row"></div>
+    <button class="btn-primary full-width" id="btn-claim-daily">🎉 Klaim Reward!</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TOAST / NOTIFICATION
+════════════════════════════════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     COMBO EFFECT OVERLAY
+════════════════════════════════════════════════════ -->
+<div id="combo-overlay" class="combo-overlay hidden">
+  <div class="combo-blast" id="combo-blast-text"></div>
+</div>
+
+<!-- Scripts -->
+<script src="sound.js"></script>
+<script src="blocks.js"></script>
+<script src="game.js"></script>
+<script src="ui.js"></script>
+<script src="profile.js"></script>
+<script src="shop.js"></script>
+<script src="leaderboard.js"></script>
+<script src="multiplayer.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
